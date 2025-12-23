@@ -68,6 +68,7 @@ export type Database = {
           start_date: string | null
           status: string
           type: string
+          units: number
           user_id: string
         }
         Insert: {
@@ -81,6 +82,7 @@ export type Database = {
           start_date?: string | null
           status?: string
           type: string
+          units: number
           user_id: string
         }
         Update: {
@@ -94,6 +96,7 @@ export type Database = {
           start_date?: string | null
           status?: string
           type?: string
+          units?: number
           user_id?: string
         }
         Relationships: [

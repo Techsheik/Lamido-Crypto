@@ -17,6 +17,8 @@ const Invest = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const planId = searchParams.get("plan");
+  // Vercel has no backend API route for investments; make sure we always use Supabase directly
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [units, setUnits] = useState("");
@@ -45,6 +47,9 @@ const Invest = () => {
   const createInvestment = useMutation({
     mutationFn: async () => {
       if (!user || !plan) throw new Error("Missing data");
+      if (!supabaseUrl) {
+        throw new Error("Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY.");
+      }
       
       const numUnits = Number(units);
       if (isNaN(numUnits) || numUnits < 1 || !Number.isInteger(numUnits)) {
@@ -52,15 +57,13 @@ const Invest = () => {
       }
 
       const investAmount = numUnits * UNIT_PRICE;
-      if (investAmount < Number(plan.min_amount)) {
-        throw new Error(`Minimum investment is $${plan.min_amount} (1 unit)`);
-      }
 
       // Set end date to 7 days from now for weekly cycle
+      const startDate = new Date().toISOString();
       const endDate = new Date();
       endDate.setDate(endDate.getDate() + 7);
 
-      const { error } = await supabase.from("investments").insert({
+      const { error: investmentError } = await supabase.from("investments").insert({
         user_id: user.id,
         plan_id: plan.id,
         amount: investAmount,
@@ -68,24 +71,27 @@ const Invest = () => {
         type: plan.name,
         roi: Number(plan.roi_percentage),
         duration: 7, // 7 days for weekly cycle
+        start_date: startDate,
         end_date: endDate.toISOString(),
         status: "active",
       });
 
-      if (error) throw error;
+      if (investmentError) throw investmentError;
 
       // Create transaction record
-      await supabase.from("transactions").insert({
+      const { error: transactionError } = await supabase.from("transactions").insert({
         user_id: user.id,
         type: "deposit",
         amount: investAmount,
         status: "completed",
       });
+
+      if (transactionError) throw transactionError;
     },
     onSuccess: () => {
-      toast({ title: "Investment created successfully!" });
+      toast({ title: "Investment created successfully! Proceed to payment." });
       queryClient.invalidateQueries({ queryKey: ["investments"] });
-      navigate("/investments");
+      navigate("/payment");
     },
     onError: (error: Error) => {
       toast({ 

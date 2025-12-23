@@ -4,10 +4,11 @@ import { AdminLayout } from "@/components/AdminLayout";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { EditUserDialog } from "@/components/admin/EditUserDialog";
+import { AddUserDialog } from "@/components/admin/AddUserDialog";
 import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
 
 const AdminUsers = () => {
@@ -15,6 +16,7 @@ const AdminUsers = () => {
   const queryClient = useQueryClient();
   const [editingUser, setEditingUser] = useState<any>(null);
   const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
+  const [isAddingUser, setIsAddingUser] = useState(false);
 
   const { data: users, isLoading } = useQuery({
     queryKey: ["admin-users"],
@@ -74,7 +76,13 @@ const AdminUsers = () => {
   return (
     <AdminLayout>
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold">Users Management</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold">Users Management</h1>
+          <Button onClick={() => setIsAddingUser(true)}>
+            <UserPlus className="h-4 w-4 mr-2" />
+            Add User
+          </Button>
+        </div>
         
         <div className="rounded-lg border bg-card">
           <Table>
@@ -131,6 +139,11 @@ const AdminUsers = () => {
         user={editingUser}
         open={!!editingUser}
         onOpenChange={(open) => !open && setEditingUser(null)}
+      />
+
+      <AddUserDialog
+        open={isAddingUser}
+        onOpenChange={setIsAddingUser}
       />
 
       <DeleteConfirmDialog

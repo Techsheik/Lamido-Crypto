@@ -6,6 +6,11 @@ import {
   Receipt,
   Settings,
   User,
+  Briefcase,
+  Package,
+  Megaphone,
+  Shield,
+  FileCheck,
 } from "lucide-react";
 import {
   Sidebar,
@@ -24,6 +29,11 @@ const items = [
   { title: "Users", url: "/admin/users", icon: Users },
   { title: "Investments", url: "/admin/investments", icon: TrendingUp },
   { title: "Transactions", url: "/admin/transactions", icon: Receipt },
+  { title: "Transaction Proofs", url: "/admin/transaction-proofs", icon: FileCheck },
+  { title: "Announcements", url: "/admin/announcements", icon: Megaphone },
+  { title: "Admin Management", url: "/admin/management", icon: Shield },
+  { title: "Investor Management", url: "/admin/investor-management", icon: Briefcase },
+  { title: "Plan Builder", url: "/admin/plan-builder", icon: Package },
   { title: "Settings", url: "/admin/settings", icon: Settings },
   { title: "Profile", url: "/admin/profile", icon: User },
 ];

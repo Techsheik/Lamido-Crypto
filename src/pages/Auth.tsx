@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { SignupSuccessDialog } from "@/components/SignupSuccessDialog";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo.png";
@@ -58,9 +58,15 @@ const Auth = () => {
     }
   }, [user, loading, navigate, showSuccessDialog]);
 
-  // Show nothing while checking auth state
   if (loading) {
-    return null;
+    return (
+      <div className="w-screen h-screen fixed inset-0 flex items-center justify-center bg-gradient-to-b from-background to-muted">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          <p className="text-lg text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -160,7 +166,47 @@ const Auth = () => {
         userCode={userCode}
       />
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-card to-muted p-4 py-8">
-        <Card className="w-full max-w-2xl shadow-elegant border-border/50 mx-auto">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div className="hidden lg:flex flex-col justify-center space-y-6 pl-6">
+            <div className="space-y-4">
+              <h2 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                Start Trading Today
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                Join thousands of investors in the Lamido Crypto Trading Community and grow your wealth.
+              </p>
+            </div>
+            <div className="space-y-4">
+              <div className="flex gap-3">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <span className="text-primary font-bold">✓</span>
+                </div>
+                <div>
+                  <h4 className="font-semibold">Secure & Safe</h4>
+                  <p className="text-sm text-muted-foreground">Bank-grade security for your investments</p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <span className="text-primary font-bold">✓</span>
+                </div>
+                <div>
+                  <h4 className="font-semibold">High Returns</h4>
+                  <p className="text-sm text-muted-foreground">Competitive ROI on your investments</p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <span className="text-primary font-bold">✓</span>
+                </div>
+                <div>
+                  <h4 className="font-semibold">Expert Support</h4>
+                  <p className="text-sm text-muted-foreground">24/7 customer support team</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <Card className="w-full shadow-elegant border-border/50 mx-auto">
         <CardHeader className="text-center relative pt-12 pb-4">
           <Button
             variant="ghost"
@@ -214,8 +260,24 @@ const Auth = () => {
                   />
                 </div>
                 <Button type="submit" className="w-full hover:shadow-glow-primary transition-all" disabled={loading}>
-                  {loading ? "Signing in..." : "Sign In"}
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Signing in...
+                    </>
+                  ) : (
+                    "Sign In"
+                  )}
                 </Button>
+                <div className="text-center pt-2">
+                  <button
+                    type="button"
+                    onClick={() => navigate("/forgot-password")}
+                    className="text-sm text-primary hover:underline"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
               </form>
             </TabsContent>
             <TabsContent value="signup">
@@ -345,13 +407,21 @@ const Auth = () => {
                   />
                 </div>
                 <Button type="submit" className="w-full hover:shadow-glow-primary transition-all" disabled={loading}>
-                  {loading ? "Creating account..." : "Sign Up"}
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Creating account...
+                    </>
+                  ) : (
+                    "Sign Up"
+                  )}
                 </Button>
               </form>
             </TabsContent>
           </Tabs>
         </CardContent>
         </Card>
+        </div>
       </div>
     </>
   );

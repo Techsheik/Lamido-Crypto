@@ -136,11 +136,17 @@ const Dashboard = () => {
               <Button variant="outline" className="w-full" onClick={() => navigate("/deposit")}>
                 Deposit Funds
               </Button>
+              <Button variant="outline" className="w-full" onClick={() => navigate("/payment")}>
+                Make Payment
+              </Button>
               <Button variant="outline" className="w-full" onClick={() => navigate("/investments")}>
                 View My Investments
               </Button>
               <Button variant="outline" className="w-full" onClick={() => navigate("/transactions")}>
                 Transaction History
+              </Button>
+              <Button variant="outline" className="w-full" onClick={() => navigate("/announcements")}>
+                View Announcements
               </Button>
             </div>
           </CardContent>

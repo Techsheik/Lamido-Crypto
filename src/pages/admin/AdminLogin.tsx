@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Shield } from "lucide-react";
+import { Shield, Home, Loader2 } from "lucide-react";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -94,8 +94,31 @@ const AdminLogin = () => {
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Signing in..." : "Sign In"}
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                "Sign In"
+              )}
             </Button>
+            <div className="flex gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => navigate("/forgot-password")}
+                className="flex-1 text-sm text-primary hover:underline"
+              >
+                Forgot password?
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("/")}
+                className="flex-1 text-sm text-primary hover:underline"
+              >
+                Back to home
+              </button>
+            </div>
           </form>
         </CardContent>
       </Card>
